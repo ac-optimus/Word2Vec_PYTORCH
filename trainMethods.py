@@ -21,11 +21,11 @@ def train(model, optimizer, loss_function, train_iter, val_iter, epoch, model_ty
     """ model --> model
         optimizer --> optimizer used
         loss_function -->  loss function used
-        train --> training dataset itterator
+        train_iter --> training dataset itterator
         val_itter --> validation dataset itterator
         epoch --> number of epochs
         model_type --> CBOW for contineous bag of words/ SKIP GRAM for skip gram
-        filename --> iniital name of file that has the best model.parametes() till current epoch
+        filename --> inital name of file that has the best model.parametes() till current epoch
         val_interval --> interval at will validation needs to be done
         """
     optimizer = optimizer
@@ -41,15 +41,15 @@ def train(model, optimizer, loss_function, train_iter, val_iter, epoch, model_ty
                 if model_type == "SKIP GRAM":
                     log_prob = model(word_i)
                     loss=1
-                    for i in range(len(log_prob)):
-                        loss_i = loss_function(log_prob[i].squeeze(), context_i[:,i])
+                    for i in range(log_prob.shape[1]):
+                        loss_i = loss_function(log_prob[:,i,], context_i[:,i])
                         loss = loss*loss_i
+                    loss = loss/(i+1)
                 else:
                     log_prob = model(context_i)
-                    loss = loss_function(log_prob, word_i.squeeze())
+                    loss = loss_function(log_prob.squeeze(), word_i.squeeze())
 
                 optimizer.zero_grad()
-                print ("y_hat: ", log_prob.shape, "y: ", word_i.squeeze())
                 loss.backward()
                 optimizer.step()
                 rolling_loss += loss
@@ -63,12 +63,13 @@ def train(model, optimizer, loss_function, train_iter, val_iter, epoch, model_ty
                     if model_type == "SKIP GRAM":
                         log_prob = model(word_i)
                         loss_val=1
-                        for i in range(len(log_prob)):
-                            loss_i = loss_function(log_prob[i].squeeze(), context_i[:,i])
+                        for i in range(log_prob.shape[1]):
+                            loss_i = loss_function(log_prob[:,i,], context_i[:,i])
                             loss_val = loss_val*loss_i
+                        loss = loss/(i+1)
                     else:
                         log_prob = model(context_i)
-                        loss_val = loss_function(log_prob, word_i.squeeze())
+                        loss_val = loss_function(log_prob.squeeze(), word_i.squeeze())
                     rolling_val += loss_val
                 least_val = save_model(model,least_val, rolling_val.mean().item(), filename, epoch_i)
                 val_error.append(rolling_val)

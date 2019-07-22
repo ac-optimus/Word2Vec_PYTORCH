@@ -6,13 +6,7 @@ class Vocabulary:
         self.token_to_index = {}
         self.token_to_index = {word_i:i for i, word_i in enumerate(set(lst_tokens))}
         self.index_to_token  = {}
-        self.index_to_token = {i:word_i for i, word_i in enumerate(set(lst_tokens))}
-        # self.types = list(set(lst_tokens))
-
-        # for i in range(len(self.types)):
-        #     if self.types[i] not in self.token_to_index.keys():
-        #         self.token_to_index[self.types[i]] = i
-        #         self.index_to_token[i] = self.types[i]
+        self.index_to_token = {self.token_to_index[word_i]:word_i for word_i in self.token_to_index}
     
     def add_token(self, token):
         """adds a new element to the existing Vocabulary"""
@@ -44,6 +38,7 @@ class preprocessing:
         pass
     def tokenize(self, corpus):
         """tokenize the given corpus which can be an itterator(in future)"""
+        #TODO
         return corpus.split()
 
     def get_context(self,CONTEXT_LEN, corpus):
@@ -62,8 +57,19 @@ class preprocessing:
             context_lst[i][0] = list(map(lambda x: word_location[x], context_lst[i][0]))
             context_lst[i][1] = word_location[context_lst[i][1]]
         return context_lst
+
+    def split_train_val_test(self,ratio,data):
+        """ratio --> train:validation:test"""
+        index = [int(i*len(data)) for i in ratio]
+        index[1] += index[0]
+        index[2] += index[1]
+        train = data[:index[0]]
+        val = data[index[0]:index[1]]
+        test = data[index[1]:index[2]]
+        return train, val, test
     
 class DatasetNLP(Dataset):
+    """convets to pytorch Dataset format"""
     def __init__(self,context_lst, transdorms=None):
         self.data = context_lst
         self.x, self.y = self.get_dataset()
