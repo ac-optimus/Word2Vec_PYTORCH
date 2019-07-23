@@ -17,7 +17,7 @@ def save_model(model, least_val, current_val, filename, epoch):
         return current_val
     return least_val
 
-def train(model, optimizer, loss_function, train_iter, val_iter, epoch, model_type, filename="", val_interval=10):
+def train(**kwargs) :
     """ model --> model
         optimizer --> optimizer used
         loss_function -->  loss function used
@@ -28,6 +28,10 @@ def train(model, optimizer, loss_function, train_iter, val_iter, epoch, model_ty
         filename --> inital name of file that has the best model.parametes() till current epoch
         val_interval --> interval at will validation needs to be done
         """
+    #paramters -->
+    parameters = ["model","optimizer","loss_function", "train_iter", "val_iter","epoch", "model_type", "filename", "val_interval"]
+    model,optimizer,loss_function, train_iter, val_iter,epoch, model_type, filename, val_interval = \
+                            [kwargs[i] for i in parameters]
     optimizer = optimizer
     loss_function = loss_function
     train_error, val_error = [], []

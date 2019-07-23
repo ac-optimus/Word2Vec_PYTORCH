@@ -46,16 +46,26 @@ test_loader = DataLoader(dataset=test_set,\
                          batch_size=BATCH_SIZE, shuffle=True)
 
 # choose the model-->uncomment one that you want to play with
-# model = CBOW(100,20)
-model = SKIP_GRAM(100,20,context_len=10)
+model = CBOW(100,20)
+# model = SKIP_GRAM(100,20,context_len=10)
 
-#train --> uncomment accordingly
+#train -->
 optimizer = optim.Adam(model.parameters(), lr = 0.001 )
 loss_function = nn.NLLLoss()
-# train(model, optimizer, loss_function, train_loader,val_loader,10,"CBOW", filename="", val_interval=10)
-train(model, optimizer, loss_function, train_loader, val_loader,10,"SKIP GRAM", filename="", val_interval=10)
+setting = {"model":model,
+            "optimizer" : optimizer,
+            "loss_function":loss_function,
+            "train_iter":train_loader,
+            "val_iter":val_loader,
+            "test_iter":test_loader,
+            "epoch":10,
+            "model_type":"CBOW",
+            # "model_type":"SKIP GRAM",
+            "filename":"",
+            "val_interval":10,
+            "Vocabulary":Vocab}
+train(**setting)
 
-#test --> uncomment accordingly
-# y_hat = test(model, loss_function,test_loader, Vocab, model_type = "CBOW")
-y_hat = test(model, loss_function,test_loader, Vocab, model_type = "SKIP GRAM")
-# print (y_hat)
+#test -->
+y_hat = test(**setting)
+print (y_hat)
