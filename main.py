@@ -7,7 +7,7 @@ from my_classes import *
 
 CONTEXT_LEN = 5
 FILENAME = "dummy_corpus.txt"  #replace with your corpus file
-BATCH_SIZE = 2
+BATCH_SIZE = 200
 
 #get the datsaet
 with open(FILENAME, 'r') as f:
@@ -46,9 +46,10 @@ test_loader = DataLoader(dataset=test_set,\
                          batch_size=BATCH_SIZE, shuffle=True)
 
 # choose the model-->uncomment one that you want to play with
-model = CBOW(100,20)
+num_embeddings, embedding_dim = len(Vocab), 300
+model = CBOW(num_embeddings, embedding_dim )
 # model = SKIP_GRAM(100,20,context_len=10)
-
+print ("reached here")
 #train -->
 optimizer = optim.Adam(model.parameters(), lr = 0.001 )
 loss_function = nn.NLLLoss()
@@ -63,7 +64,9 @@ setting = {"model":model,
             # "model_type":"SKIP GRAM",
             "filename":"",
             "val_interval":10,
-            "Vocabulary":Vocab}
+            "Vocabulary":Vocab,
+            "ns":5,
+            "negetive_sample":False}
 train(**setting)
 
 #test -->
