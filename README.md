@@ -2,7 +2,7 @@
 # Word2Vec_PYTORCH
 
 The repository contains PyTorch implementation of Word2Vec. All the major tasks like vocabulary creation, preprocessing, 
-train and test methods are added. This can be helpful in any NLP project where Word2Vec is an essential part. 
+train and test methods are supported. This can be helpful in any NLP project where Word2Vec is an essential part. 
 The PyTorch implementation enables simple tweaks that can be useful. 
 
 ## **Repository Structure:** 
